@@ -1,0 +1,46 @@
+{{- if and (eq .Values.ingress.enabled true) (eq .Values.containerPlataform "rancher") }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }} 
+  labels:
+    app: {{ .Values.appName }} 
+    deploymentconfig: {{ .Values.appName }} 
+    kube_app: {{ .Values.appName }} 
+    kube_deployment: {{ .Values.appName }} 
+    kube_namespace: {{ .Values.namespace }}
+    tags.datadoghq.com/env: {{ .Values.environment }}
+    tags.datadoghq.com/service: {{ .Values.appName }}
+    tags.datadoghq.com/version: {{ .Values.image.tag }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }} 
+      deploymentconfig: {{ .Values.appName }} 
+      kube_app: {{ .Values.appName }} 
+      kube_deployment: {{ .Values.appName }} 
+      kube_namespace: {{ .Values.namespace }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }} 
+        deploymentconfig: {{ .Values.appName }} 
+        kube_app: {{ .Values.appName }} 
+        kube_deployment: {{ .Values.appName }} 
+        kube_namespace: {{ .Values.namespace }}
+        tags.datadoghq.com/env: {{ .Values.environment }}
+        tags.datadoghq.com/service: {{ .Values.appName }}
+        tags.datadoghq.com/version: {{ .Values.image.tag }}
+    spec:    
+      containers:
+        - name: {{ .Values.appName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}         
+          {{- with .Values.image.ports }}
+          ports:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}    
+{{- end }}

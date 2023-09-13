@@ -1,0 +1,18 @@
+{{- if and (eq .Values.ingress.enabled true) (eq .Values.containerPlataform "openshift") }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:  
+  labels:
+    app: {{ .Values.appName }}
+  name: {{ .Values.appName }}
+spec:
+  host: {{ .Values.ingress.host }}
+  port:
+    targetPort: http
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: {{ .Values.appName }}
+{{- end }}      

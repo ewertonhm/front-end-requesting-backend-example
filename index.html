@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Front-end Python e JavaScript</title>
+</head>
+<body>
+    <button onclick="sendRequest('POST', 'http:\/\/dotnet-api:5000/api/todoitems', {'name': 'Tarefa para deletar', 'isComplete': false})">Enviar POST1</button>
+    <button onclick="sendRequest('POST', 'http:\/\/dotnet-api:5000/api/todoitems', {'name': 'Instrumentar aplicação', 'isComplete': false})">Enviar POST2</button>
+    <button onclick="sendRequest('POST', 'http:\/\/dotnet-api:5000/api/todoitems', {'name': 'Configurar Unified Service Tagging', 'isComplete': false})">Enviar POST3</button>
+    <button onclick="sendRequest('POST', 'http:\/\/dotnet-api:5000/api/todoitems', {'name': 'Habilitar Runtime Metrics', 'isComplete': false})">Enviar POST4</button>
+    <button onclick="sendRequest('GET', 'http:\/\/dotnet-api:5000/api/todoitems')">Enviar GET1</button>
+    <button onclick="sendRequest('PUT', 'http:\/\/dotnet-api:5000/api/todoitems', {'name': 'Instrumentar aplicação', 'isComplete': true})">Enviar PUT1</button>
+    <button onclick="sendRequest('DELETE', 'http:\/\/dotnet-api:5000/api/todoitems/1')">Enviar DELETE1</button>
+    <button onclick="sendRequest('GET', 'http:\/\/dotnet-api:5000/api/todoitems')">Enviar GET2</button>
+    <div id="response"></div>
+
+    <script>
+        function sendRequest(method, url, data = null) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        document.getElementById('response').innerHTML = xhr.responseText;
+                    } else {
+                        document.getElementById('response').innerHTML = 'Erro: ' + xhr.status + ' - ' + xhr.statusText;
+                    }
+                }
+            };
+            xhr.open(method, url, true);
+            if (data) {
+                xhr.withCredentials = true;
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify(data));
+            } else {
+                xhr.send();
+            }
+        }
+    </script>
+</body>
+</html>
